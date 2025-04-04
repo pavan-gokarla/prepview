@@ -1,17 +1,16 @@
-import { auth, signIn } from '@/auth'
+"use client"
+
+import { GoogleSignIn } from '@/actions/userActions'
+import { auth } from '@/auth'
 import React from 'react'
 
 const SignIn = () => {
-    async function handleSignIn() {
-        const user = await auth()
-        console.log(user)
-    }
-    handleSignIn()
+
     return (
         <div>
             <button onClick={async () => {
-                "use server"
-                await signIn("google")
+
+                await GoogleSignIn()
             }} >Sign In</button>
         </div>
     )
