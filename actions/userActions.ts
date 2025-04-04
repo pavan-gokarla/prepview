@@ -1,13 +1,21 @@
 "use server"
 
-import { signIn, signOut } from "@/auth"
+import { auth, signIn, signOut } from "@/auth"
 
 export async function GoogleSignIn() {
-    await signIn('google')
+    await signIn('google', {
+        redirectTo: "/dashboard",
+        redirect: true
+    })
 }
 
 
 
 export async function SignOutFromAll() {
     await signOut()
-}   
+}
+
+
+export async function GetUser() {
+    return await auth()
+}
