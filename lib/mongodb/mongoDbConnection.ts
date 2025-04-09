@@ -3,7 +3,7 @@ require('dotenv').config()
 import mongoose from "mongoose";
 
 const mongo_uri = process.env.MONGO_DB_URI!;
-console.log("Mongo URI: ", mongo_uri)
+
 
 if (!mongo_uri) {
     throw new Error("MONGO_DB_URI is not defined in .env file");

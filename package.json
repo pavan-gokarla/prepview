@@ -2,7 +2,6 @@
   "name": "prepview",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -10,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vapi-ai/web": "^2.2.5",
     "dotenv": "^16.4.7",
+    "lucide-react": "^0.487.0",
     "mongoose": "^8.13.2",
     "next": "15.2.4",
     "react": "^19.0.0",
