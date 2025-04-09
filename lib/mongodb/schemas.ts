@@ -4,7 +4,6 @@ interface IUser {
     _id: string;
     name: string;
     email: string;
-    password: string;
     credits: number;
 }
 
@@ -13,7 +12,6 @@ const userSchema = new Schema({
     _id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
     credits: { type: Number, default: 10 },
 });
 
@@ -25,7 +23,7 @@ interface IInterview {
     questions: string[];
     techStack: string[];
     role: string;
-    difficulty: number;
+    experienceLevel: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -37,7 +35,7 @@ const interviewSchema = new Schema({
     questions: { type: [String], required: true },
     techStack: { type: [String], required: true },
     role: { type: String, required: true },
-    difficulty: { type: Number, required: true },
+    experienceLevel: { type: Number, required: true },
 }, {
     timestamps: true,
 })
