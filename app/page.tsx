@@ -1,10 +1,9 @@
-import Agent from '@/components/ui/Agent'
 import React from 'react'
 
 const page = () => {
-  return (
-    <Agent />
-  )
+    return (
+        <div>page</div>
+    )
 }
 
 export default page
