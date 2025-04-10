@@ -1,3 +1,6 @@
+"use client"
+
+
 import { Form } from '@/components/ui/form'
 import Image from 'next/image'
 import Link from 'next/link'
