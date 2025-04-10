@@ -7,7 +7,7 @@ import React from 'react'
 
 
 
-const FormWrapper = () => {
+const Login = () => {
     return (
         <div className='max-h-screen w-screen bg-[var(--noble--black--700)] flex' >
             <div className=' h-screen w-screen lg:w-[70vw] py-[20vh] px-[15vw] flex flex-col justify-center items-center ' >
@@ -25,4 +25,4 @@ const FormWrapper = () => {
     )
 }
 
-export default FormWrapper
+export default Login

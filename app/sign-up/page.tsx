@@ -2,11 +2,12 @@ import { Form } from '@/components/ui/form'
 import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
+import { Sign } from 'crypto'
 
 
 
 
-const FormWrapper = () => {
+const SignUp = () => {
     return (
         <div className='max-h-screen w-screen bg-[var(--noble--black--700)] flex' >
             <div className='h-screen hidden lg:flex w-[50vw]  rounded-3xl' >
@@ -24,4 +25,4 @@ const FormWrapper = () => {
     )
 }
 
-export default FormWrapper
+export default SignUp
