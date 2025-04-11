@@ -3,15 +3,18 @@ import type { NextRequest } from "next/server";
 import { auth } from "./auth";
 
 export async function middleware(request: NextRequest) {
+    const { pathname } = request.nextUrl;
+    const isAuthPage =
+        pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
     const user = await auth();
-    console.log("middleware", user);
-    if (
-        !user &&
-        request.nextUrl.pathname !== "/sign-in" &&
-        request.nextUrl.pathname !== "/sign-up"
-    ) {
+
+    if (user && isAuthPage) {
+        return NextResponse.redirect(new URL("/", request.url));
+    }
+    if (!user && !isAuthPage) {
         return NextResponse.redirect(new URL("/sign-in", request.url));
     }
+
     return NextResponse.next();
 }
 
