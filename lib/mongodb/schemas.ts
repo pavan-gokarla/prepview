@@ -1,22 +1,19 @@
 import { Schema, model, models } from "mongoose";
 
 interface IUser {
-    _id: string;
     name: string;
     email: string;
-    credits: number;
+    password: string;
 }
 
-
 const userSchema = new Schema({
-    _id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    credits: { type: Number, default: 10 },
+    password: { type: String, required: true },
+    credits: { type: Number, default: 10, required: false },
 });
 
 export const User = models?.User || model<IUser>("User", userSchema);
-
 
 interface IInterview {
     userId: string;
@@ -28,20 +25,18 @@ interface IInterview {
     updatedAt: Date;
 }
 
+const interviewSchema = new Schema(
+    {
+        userId: { type: Schema.Types.ObjectId, ref: "User" },
+        questions: { type: [String], required: true },
+        techStack: { type: [String], required: true },
+        role: { type: String, required: true },
+        experienceLevel: { type: Number, required: true },
+    },
+    {
+        timestamps: true,
+    }
+);
 
-
-const interviewSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    questions: { type: [String], required: true },
-    techStack: { type: [String], required: true },
-    role: { type: String, required: true },
-    experienceLevel: { type: Number, required: true },
-}, {
-    timestamps: true,
-})
-
-
-
-export const Interview = models?.Interview || model<IInterview>("Interview", interviewSchema);
-
-
+export const Interview =
+    models?.Interview || model<IInterview>("Interview", interviewSchema);
