@@ -6,7 +6,6 @@ import { Input } from "./input";
 import { useState } from 'react';
 import { getUser, signInGithub, signInGoogle, signInUser, signUp } from '@/lib/actions/actions';
 import { toast } from 'sonner';
-import { signIn } from "@/auth"
 import { useNavigate } from '@/lib/custom-hooks/hooks';
 
 
@@ -23,6 +22,8 @@ export function Form({ signIn }: { signIn: boolean }) {
             const res = await signInUser(formData)
             if (res.success) {
                 navigate("/")
+            } else {
+                toast.error(res.message)
             }
         }
         else {
