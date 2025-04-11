@@ -31,7 +31,9 @@ const interviewSchema = new Schema(
         questions: { type: [String], required: true },
         techStack: { type: [String], required: true },
         role: { type: String, required: true },
-        experienceLevel: { type: Number, required: true },
+        level: { type: Number, required: true },
+        type: { type: String, required: true },
+        noOfQuestions: { type: Number, required: true },
     },
     {
         timestamps: true,

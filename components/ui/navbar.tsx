@@ -13,7 +13,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Session } from "next-auth";
 import { getUser } from "@/lib/actions/actions";
-import { BadgePlus, BookCheck, FileCode } from "lucide-react";
+import { BadgePlus, BookCheck, BookOpenCheck, FileCode, MessageSquareText } from "lucide-react";
 
 export function SideBar({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<Session | null>(null);
@@ -55,14 +55,14 @@ export function SideBar({ children }: { children: React.ReactNode }) {
             label: "All Interviews",
             href: "/all-interviews",
             icon: (
-                <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <BookOpenCheck className="h-5 w-5 shrink-0 " />
             ),
         },
         {
             label: "FeedBacks",
             href: "/feedbacks",
             icon: (
-                <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <MessageSquareText className="h-5 w-5 shrink-0 " />
             ),
         },
         {
