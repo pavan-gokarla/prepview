@@ -1,6 +1,7 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 
 export const interviewer: CreateAssistantDTO = {
+    maxDurationSeconds: 300,
     name: "Interviewer",
     firstMessage:
         "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
@@ -16,7 +17,7 @@ export const interviewer: CreateAssistantDTO = {
         voiceId: "sarah",
         stability: 0.4,
         similarityBoost: 0.8,
-        speed: 0.9,
+        speed: 1.1,
         style: 0.5,
         useSpeakerBoost: true,
     },

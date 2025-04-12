@@ -1,6 +1,6 @@
 "use client"
 
-import { getUser } from '@/lib/actions/actions';
+import { createFeedback, getUser } from '@/lib/actions/actions';
 import { Session } from 'next-auth';
 import React, { useEffect, useState } from 'react'
 import { Button } from './button';
@@ -8,6 +8,7 @@ import CustomAvatar from './CustomAvatar';
 import { vapi } from '@/lib/vapi/vapi.sdk';
 import { useRouter } from 'next/navigation';
 import { interviewer } from '@/lib/constants/index'
+import InterViewId from '@/app/interview/[id]/page';
 
 
 
@@ -18,7 +19,7 @@ enum CallStatus {
     FINISHED = "FINISHED",
 }
 
-interface SavedMessage {
+export interface SavedMessage {
     role: "user" | "system" | "assistant";
     content: string;
 }
@@ -51,9 +52,7 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
             if (message.type === "transcript" && message.transcriptType === "final") {
                 const newMessage = { role: message.role, content: message.transcript };
                 setMessages((prev) => [...prev, newMessage]);
-                if (message.transcript === "ok thank you for your time" && message.role === "assistant") {
-                    vapi.stop()
-                }
+
             }
         };
 
@@ -93,7 +92,8 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
 
         //TODO handle feedback
         const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-            router.push('/')
+            const res = await createFeedback(id!, user?.user?.email!, messages)
+            router.push('/feedbacks')
         };
 
         if (callStatus === CallStatus.FINISHED) {
@@ -133,6 +133,8 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
     };
     const handleDisconnect = () => {
         setCallStatus(CallStatus.FINISHED);
+        vapi.say("thank you for taking the interview, have a nice day", true, false)
+
         vapi.stop();
     };
     return (

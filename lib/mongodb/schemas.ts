@@ -1,3 +1,4 @@
+import mongoose, { Document } from "mongoose";
 import { Schema, model, models } from "mongoose";
 
 interface IUser {
@@ -44,3 +45,82 @@ const interviewSchema = new Schema(
 
 export const Interview =
     models?.Interview || model<IInterview>("Interview", interviewSchema);
+
+export interface CategoryScore {
+    name:
+        | "Communication Skills"
+        | "Technical Knowledge"
+        | "Problem Solving"
+        | "Cultural Fit"
+        | "Confidence and Clarity";
+    score: number;
+    comment: string;
+}
+
+export interface InterviewFeedback extends Document {
+    totalScore: number;
+    categoryScores: CategoryScore[];
+    strengths: string[];
+    areasForImprovement: string[];
+    finalAssessment: string;
+}
+
+const CategoryScoreSchema = new Schema<CategoryScore>({
+    name: {
+        type: String,
+        enum: [
+            "Communication Skills",
+            "Technical Knowledge",
+            "Problem Solving",
+            "Cultural Fit",
+            "Confidence and Clarity",
+        ],
+        required: true,
+    },
+    score: {
+        type: Number,
+        required: true,
+    },
+    comment: {
+        type: String,
+        required: true,
+    },
+});
+
+const InterviewFeedbackSchema = new Schema<InterviewFeedback>({
+    totalScore: {
+        type: Number,
+        required: true,
+    },
+    categoryScores: {
+        type: [CategoryScoreSchema],
+        validate: {
+            validator: function (val: CategoryScore[]) {
+                return val.length === 5;
+            },
+            message: "Exactly 5 category scores are required.",
+        },
+        required: true,
+    },
+    strengths: {
+        type: [String],
+        required: true,
+    },
+    areasForImprovement: {
+        type: [String],
+        required: true,
+    },
+    finalAssessment: {
+        type: String,
+        required: true,
+    },
+});
+
+const InterviewFeedbackModel =
+    mongoose.models.InterviewFeedback ||
+    mongoose.model<InterviewFeedback>(
+        "InterviewFeedback",
+        InterviewFeedbackSchema
+    );
+
+export default InterviewFeedbackModel;

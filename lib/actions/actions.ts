@@ -4,6 +4,10 @@ import { ApiResponse } from "../models/types";
 import { auth, signIn } from "@/auth";
 import { connectDB } from "../mongodb/mongoDbConnection";
 import { Interview } from "../mongodb/schemas";
+import { SavedMessage } from "@/components/ui/agent";
+import { google } from "@ai-sdk/google";
+import { generateObject } from "ai";
+import { feedbackSchema } from "../mongodb/constants";
 
 export async function signInGoogle() {
     await signIn("google");
@@ -83,4 +87,88 @@ export async function getInterviews(email: string) {
 export async function getInterviewById(id: string) {
     await connectDB();
     return await Interview.findById({ _id: id });
+}
+
+export async function createFeedback(
+    interviewId: string,
+    email: string,
+    transcript: SavedMessage[]
+) {
+    await connectDB();
+    try {
+        const formattedTranscript = transcript
+            .map(
+                (sentence: { role: string; content: string }) =>
+                    `- ${sentence.role}: ${sentence.content}\n`
+            )
+            .join("");
+
+        const { object } = await generateObject({
+            model: google("gemini-2.0-flash-001", {
+                structuredOutputs: true,
+            }),
+            schema: feedbackSchema,
+            prompt: `
+          You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+          Transcript:
+          ${formattedTranscript}
+  
+          Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
+          - **Communication Skills**: Clarity, articulation, structured responses.
+          - **Technical Knowledge**: Understanding of key concepts for the role.
+          - **Problem-Solving**: Ability to analyze problems and propose solutions.
+          - **Cultural & Role Fit**: Alignment with company values and job role.
+          - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+          - ** Make sure that the output adheres to the following zod schema
+             z.object({
+                totalScore: z.number(),
+                categoryScores: z.tuple([
+                    z.object({
+                        name: z.literal("Communication Skills"),
+                        score: z.number(),
+                        comment: z.string(),
+                    }),
+                    z.object({
+                        name: z.literal("Technical Knowledge"),
+                        score: z.number(),
+                        comment: z.string(),
+                    }),
+                    z.object({
+                        name: z.literal("Problem Solving"),
+                        score: z.number(),
+                        comment: z.string(),
+                    }),
+                    z.object({
+                        name: z.literal("Cultural Fit"),
+                        score: z.number(),
+                        comment: z.string(),
+                    }),
+                    z.object({
+                        name: z.literal("Confidence and Clarity"),
+                        score: z.number(),
+                        comment: z.string(),
+                    }),
+                ]),
+                strengths: z.array(z.string()),
+                areasForImprovement: z.array(z.string()),
+                finalAssessment: z.string(),
+            });
+            thats it.
+          `,
+            system: "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
+        });
+
+        const feedback = {
+            interviewId: interviewId,
+            email: email,
+            totalScore: object.totalScore,
+            categoryScores: object.categoryScores,
+            strengths: object.strengths,
+            areasForImprovement: object.areasForImprovement,
+            finalAssessment: object.finalAssessment,
+            createdAt: new Date().toISOString(),
+        };
+    } catch (error) {
+        return { success: false, error: error };
+    }
 }

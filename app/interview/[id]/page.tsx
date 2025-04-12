@@ -1,6 +1,8 @@
 import Agent from '@/components/ui/agent'
 import { getInterviewById, getInterviews, getInterviewsByEmail } from '@/lib/actions/actions'
 import { IInterview } from '@/lib/mongodb/schemas'
+import { redirect } from 'next/navigation'
+
 import React from 'react'
 
 const InterViewId = async ({ params }: {
@@ -8,6 +10,7 @@ const InterViewId = async ({ params }: {
 }) => {
     const { id } = await params
     const interview: IInterview = await getInterviewById(id)
+    if (!interview) redirect("/")
     return (
         <div className='w-full h-full flex flex-col justify-center items-center gap-10' >
 
