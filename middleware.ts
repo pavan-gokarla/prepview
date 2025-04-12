@@ -26,5 +26,6 @@ export const config = {
         "/all-interviews",
         "/my-interviews",
         "/feedbacks",
+        "/create-interview",
     ],
 };

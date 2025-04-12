@@ -2,6 +2,8 @@
 import { ApiResponse } from "../models/types";
 
 import { auth, signIn } from "@/auth";
+import { connectDB } from "../mongodb/mongoDbConnection";
+import { Interview } from "../mongodb/schemas";
 
 export async function signInGoogle() {
     await signIn("google");
@@ -66,4 +68,19 @@ export async function signInUser(formData: FormData) {
     }
 
     return { success: true, message: "User signed in successfully" };
+}
+
+export async function getInterviewsByEmail(email: string) {
+    await connectDB();
+    return await Interview.find({ email: email });
+}
+
+export async function getInterviews(email: string) {
+    await connectDB();
+    return await Interview.find({ email: { $ne: email } });
+}
+
+export async function getInterviewById(id: string) {
+    await connectDB();
+    return await Interview.findById({ _id: id });
 }

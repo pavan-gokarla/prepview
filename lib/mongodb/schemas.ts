@@ -15,19 +15,21 @@ const userSchema = new Schema({
 
 export const User = models?.User || model<IUser>("User", userSchema);
 
-interface IInterview {
-    userId: string;
+export interface IInterview {
+    _id: string;
+    type: string;
+    email: string;
     questions: string[];
     techStack: string[];
     role: string;
-    experienceLevel: number;
+    level: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
 const interviewSchema = new Schema(
     {
-        userId: { type: Schema.Types.ObjectId, ref: "User" },
+        email: { type: String, required: true },
         questions: { type: [String], required: true },
         techStack: { type: [String], required: true },
         role: { type: String, required: true },

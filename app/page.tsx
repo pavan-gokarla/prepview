@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { MoveRight } from 'lucide-react';
 
 const page = () => {
+    redirect("/create-interview")
     const features = [
         {
             heading: " Ace Your Next Interview with an AI Voice Coach",

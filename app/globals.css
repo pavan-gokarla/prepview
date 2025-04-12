@@ -39,6 +39,12 @@ button {
   font-style: normal;
 }
 
+.agent-card{
+  width: 30vw;
+  height: 40vh;
+  background-color: var(--noble--black--500);
+}
+
 :root {
 
   font-family: "Plus Jakarta Sans";

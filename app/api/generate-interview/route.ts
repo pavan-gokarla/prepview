@@ -2,10 +2,11 @@ import { connectDB } from "@/lib/mongodb/mongoDbConnection";
 import { Interview } from "@/lib/mongodb/schemas";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
+
 export async function POST(req: Request) {
     await connectDB();
 
-    const { role, type, userId, noOfQuestions, techStack, level } =
+    const { role, type, email, noOfQuestions, techStack, level } =
         await req.json();
 
     try {
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
             level: level,
             techStack: techStack.split(","),
             questions: JSON.parse(text),
-            userId: userId,
+            email: email,
             noOfQuestions: noOfQuestions,
         };
         await Interview.create(interview);
