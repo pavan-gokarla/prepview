@@ -16,26 +16,27 @@ export function Form({ signIn }: { signIn: boolean }) {
     const [googleSignIn, setGoogleSignIn] = useState(false)
     const [githubSignIn, setGithubSignIn] = useState(false)
     const navigate = useNavigate()
-    const userAction = async (formData: FormData) => {
-        setSubmitting(true)
-        if (signIn) {
-            const res = await signInUser(formData)
-            if (res.success) {
-                navigate("/")
-            } else {
-                toast.error(res.message)
-            }
-        }
-        else {
-            const res = await signUp(formData)
-            toast.info(res.message)
-            if (res.success) {
-                navigate("/sign-in")
-            }
-        }
-        setSubmitting(false)
-    }
 
+
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+
+        setSubmitting(true)
+        const res = signIn
+            ? await signInUser(formData)
+            : await signUp(formData)
+
+        setSubmitting(false)
+
+        if (res.success) {
+            if (!signIn)
+                toast.success("User created successfully!")
+            navigate(signIn ? "/" : "/sign-in")
+        } else {
+            toast.error(res.message)
+        }
+    }
 
 
     return (<div className=' text-white w-[100%] ' >
@@ -43,7 +44,7 @@ export function Form({ signIn }: { signIn: boolean }) {
             <p className='text-[var(--noble--black--0)] text-3xl ' >Let's <span >Prepare!</span></p>
             <p className='text-[var(--noble--black--300)]' >{signIn ? "Sign in" : "Sign Up"} to Prepview and start preparing for interviews</p>
         </div>
-        <form action={userAction} id="inputs" className="mt-[1.5rem] flex flex-col justify-around gap-5">
+        <form onSubmit={onSubmit} id="inputs" className="mt-[1.5rem] flex flex-col justify-around gap-5">
             {!signIn && (
                 <Input name="name" type="text" placeholder="Your name" >
                     <User className="absolute top-[30%] right-[3%]" size={16} />
@@ -64,16 +65,13 @@ export function Form({ signIn }: { signIn: boolean }) {
                 </Input>
             )}
 
-            {/* #TODO to add forget password feild */}
-            {/* {
-                signIn && (
-                    <div id='forget' className='mt-0.5 flex flex-col items-end gap-5 ' >
-                        <Button type='button' variant='link' className='text-[16px] cursor-pointer text-[var(--noble--black--300)] ' >Forgot Password</Button>
-                    </div>
-                )
-            } */}
+
+
             <div className="sign-in  flex  mt-[0.5rem] gap-3 " >
-                <Button type='submit' disabled={submitting} variant="default" className=' flex-grow bg-[var(--stem--green--500)] text-[var(--day--blue--900)] hover:bg-[var(--stem--green--400)]  ' >{signIn ? "Sign In" : "Sign Up"}</Button>
+
+
+                <Button type='submit' variant="default" className=' flex-grow bg-[var(--stem--green--500)] text-[var(--day--blue--900)] hover:bg-[var(--stem--green--400)]  ' >{submitting ? <span className="loading loading-spinner loading-xs"></span> : signIn ? "Sign In" : "Sign Up"}</Button>
+
             </div>
         </form>
         {

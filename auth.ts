@@ -1,7 +1,11 @@
+export const runtime = "nodejs";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
+import { connectDB } from "./lib/mongodb/mongoDbConnection";
+import { User } from "./lib/mongodb/schemas";
+import { ApiResponse } from "./lib/models/types";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -14,6 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
+                console.log(credentials);
                 const res = await fetch(
                     `${process.env.DOMAIN}/api/auth/sign-in`,
                     {
@@ -40,12 +45,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     callbacks: {
         signIn: async ({ user, account, profile }) => {
-            return true;
+            const res: Response = await fetch(
+                `${process.env.DOMAIN}/api/auth/email`,
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        email: user.email,
+                    }),
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+            const { success } = await res.json();
+            return success;
         },
     },
     pages: {
         signIn: "/sign-in",
-        error: "/error",
+        error: "/sign-in",
     },
 
     session: {

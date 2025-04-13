@@ -1,13 +1,14 @@
 "use server";
 import { ApiResponse } from "../models/types";
 
-import { auth, signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { connectDB } from "../mongodb/mongoDbConnection";
-import { Interview } from "../mongodb/schemas";
+import { Interview, User } from "../mongodb/schemas";
 import { SavedMessage } from "@/components/ui/agent";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { feedbackSchema } from "../mongodb/constants";
+import { redirect } from "next/navigation";
 
 export async function signInGoogle() {
     await signIn("google");
@@ -21,7 +22,7 @@ export async function signInGithub() {
 
 export async function getUser() {
     const user = await auth();
-    console.log("user", user);
+
     return user;
 }
 
@@ -61,14 +62,14 @@ export async function signInUser(formData: FormData) {
     }
 
     try {
-        await signIn("credentials", {
+        const res = await signIn("credentials", {
             redirect: false,
             email,
             password,
         });
     } catch (error: any) {
         console.error("Error signing in:", error);
-        return { success: false, message: error.toString() };
+        return { success: false, message: "Email or password is incorrect" };
     }
 
     return { success: true, message: "User signed in successfully" };
@@ -171,4 +172,13 @@ export async function createFeedback(
     } catch (error) {
         return { success: false, error: error };
     }
+}
+
+export async function signOutUser() {
+    await signOut();
+}
+export async function emailExists(email: string) {
+    await connectDB();
+    const res = await User.exists({ email: email });
+    console.log(res);
 }
