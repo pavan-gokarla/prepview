@@ -5,6 +5,7 @@ interface IUser {
     name: string;
     email: string;
     password: string;
+    credits: number;
 }
 
 const userSchema = new Schema({
@@ -18,24 +19,21 @@ export const User = models?.User || model<IUser>("User", userSchema);
 
 export interface IInterview {
     _id: string;
-    type: string;
     email: string;
     questions: string[];
-    techStack: string[];
-    role: string;
+    techStack: string;
+    noOfQuestions: number;
     level: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
-const interviewSchema = new Schema(
+const interviewSchema = new Schema<IInterview>(
     {
         email: { type: String, required: true },
         questions: { type: [String], required: true },
-        techStack: { type: [String], required: true },
-        role: { type: String, required: true },
+        techStack: { type: String, required: true },
         level: { type: Number, required: true },
-        type: { type: String, required: true },
         noOfQuestions: { type: Number, required: true },
     },
     {
@@ -58,6 +56,8 @@ export interface CategoryScore {
 }
 
 export interface InterviewFeedback extends Document {
+    email: string;
+    interviewId: mongoose.Schema.Types.ObjectId;
     totalScore: number;
     categoryScores: CategoryScore[];
     strengths: string[];
@@ -88,6 +88,12 @@ const CategoryScoreSchema = new Schema<CategoryScore>({
 });
 
 const InterviewFeedbackSchema = new Schema<InterviewFeedback>({
+    interviewId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Interview",
+        required: true,
+    },
+    email: { type: String, required: true },
     totalScore: {
         type: Number,
         required: true,

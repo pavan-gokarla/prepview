@@ -3,7 +3,7 @@ import { ApiResponse } from "../models/types";
 
 import { auth, signIn, signOut } from "@/auth";
 import { connectDB } from "../mongodb/mongoDbConnection";
-import { Interview, User } from "../mongodb/schemas";
+import InterviewFeedbackModel, { Interview, User } from "../mongodb/schemas";
 import { SavedMessage } from "@/components/ui/agent";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
@@ -103,10 +103,10 @@ export async function createFeedback(
                     `- ${sentence.role}: ${sentence.content}\n`
             )
             .join("");
-
+        console.log("formattedTranscript", formattedTranscript);
         const { object } = await generateObject({
             model: google("gemini-2.0-flash-001", {
-                structuredOutputs: true,
+                structuredOutputs: false,
             }),
             schema: feedbackSchema,
             prompt: `
@@ -158,7 +158,7 @@ export async function createFeedback(
           `,
             system: "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
         });
-
+        console.log("here");
         const feedback = {
             interviewId: interviewId,
             email: email,
@@ -169,7 +169,11 @@ export async function createFeedback(
             finalAssessment: object.finalAssessment,
             createdAt: new Date().toISOString(),
         };
+        console.log(feedback);
+        await InterviewFeedbackModel.create(feedback);
+        return { success: true };
     } catch (error) {
+        console.log("error", error);
         return { success: false, error: error };
     }
 }

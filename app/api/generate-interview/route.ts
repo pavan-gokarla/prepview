@@ -6,17 +6,14 @@ import { generateText } from "ai";
 export async function POST(req: Request) {
     await connectDB();
 
-    const { role, type, email, noOfQuestions, techStack, level } =
-        await req.json();
+    const { email, noOfQuestions, techStack, level } = await req.json();
 
     try {
         const { text } = await generateText({
             model: google("gemini-2.0-flash-001"),
             prompt: `Prepare questions for a job interview.
-              The job role is ${role}.
               The job experience level is ${level}.
               The tech stack used in the job is: ${techStack}.
-              The focus between behavioural and technical questions should lean towards: ${type}.
               The amount of questions required is: ${noOfQuestions}.
               Please return only the questions, without any additional text.
               The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
@@ -28,10 +25,8 @@ export async function POST(req: Request) {
         });
 
         const interview = {
-            role: role,
-            type: type,
             level: level,
-            techStack: techStack.split(","),
+            techStack: techStack,
             questions: JSON.parse(text),
             email: email,
             noOfQuestions: noOfQuestions,

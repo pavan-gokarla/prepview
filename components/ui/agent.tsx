@@ -8,7 +8,8 @@ import CustomAvatar from './CustomAvatar';
 import { vapi } from '@/lib/vapi/vapi.sdk';
 import { useRouter } from 'next/navigation';
 import { interviewer } from '@/lib/constants/index'
-import InterViewId from '@/app/interview/[id]/page';
+
+import { toast } from 'sonner';
 
 
 
@@ -45,6 +46,7 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
         const onCallEnd = () => {
             console.log("call ended")
             setCallStatus(CallStatus.FINISHED);
+            handleGenerateFeedback(messages)
             vapi.stop()
         };
 
@@ -68,6 +70,7 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
 
         const onError = (error: Error) => {
             console.log("Error:", error);
+            handleGenerateFeedback(messages)
         };
 
         vapi.on("call-start", onCallStart);
@@ -88,13 +91,21 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
         };
     }, []);
 
+    const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+        const res = await createFeedback(id!, user?.user?.email!, messages)
+        if (res.success) {
+            console.log("res", res)
+            toast.success("Feedback created sucessfully ")
+            router.push("/feedbacks")
+        }
+        else {
+            toast.info("Failed to create feedback")
+            router.push("/all-interviews")
+        }
+    };
     useEffect(() => {
 
         //TODO handle feedback
-        const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-            const res = await createFeedback(id!, user?.user?.email!, messages)
-            router.push('/feedbacks')
-        };
 
         if (callStatus === CallStatus.FINISHED) {
             if (type === "generate") {
@@ -132,9 +143,8 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
         }
     };
     const handleDisconnect = () => {
-        setCallStatus(CallStatus.FINISHED);
         vapi.say("thank you for taking the interview, have a nice day", true, false)
-
+        setCallStatus(CallStatus.FINISHED);
         vapi.stop();
     };
     return (

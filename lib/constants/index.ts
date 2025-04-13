@@ -1,7 +1,7 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 
 export const interviewer: CreateAssistantDTO = {
-    maxDurationSeconds: 300,
+    maxDurationSeconds: 180,
     name: "Interviewer",
     firstMessage:
         "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
@@ -11,7 +11,10 @@ export const interviewer: CreateAssistantDTO = {
         language: "en",
     },
     endCallMessage: "bye",
-    endCallPhrases: ["bye"],
+    endCallPhrases: [
+        "bye",
+        "thank you for taking the interview, have a nice day",
+    ],
     voice: {
         provider: "11labs",
         voiceId: "sarah",
