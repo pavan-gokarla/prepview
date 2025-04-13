@@ -55,7 +55,9 @@ export interface CategoryScore {
     comment: string;
 }
 
-export interface InterviewFeedback extends Document {
+export interface InterviewFeedback {
+    _id: string;
+    techStack: string;
     email: string;
     interviewId: mongoose.Schema.Types.ObjectId;
     totalScore: number;
@@ -63,6 +65,8 @@ export interface InterviewFeedback extends Document {
     strengths: string[];
     areasForImprovement: string[];
     finalAssessment: string;
+    createdAt: Date;
+    updateAt: Date;
 }
 
 const CategoryScoreSchema = new Schema<CategoryScore>({
@@ -87,40 +91,46 @@ const CategoryScoreSchema = new Schema<CategoryScore>({
     },
 });
 
-const InterviewFeedbackSchema = new Schema<InterviewFeedback>({
-    interviewId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Interview",
-        required: true,
-    },
-    email: { type: String, required: true },
-    totalScore: {
-        type: Number,
-        required: true,
-    },
-    categoryScores: {
-        type: [CategoryScoreSchema],
-        validate: {
-            validator: function (val: CategoryScore[]) {
-                return val.length === 5;
-            },
-            message: "Exactly 5 category scores are required.",
+const InterviewFeedbackSchema = new Schema<InterviewFeedback>(
+    {
+        interviewId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Interview",
+            required: true,
         },
-        required: true,
+        techStack: { type: String, required: true },
+        email: { type: String, required: true },
+        totalScore: {
+            type: Number,
+            required: true,
+        },
+        categoryScores: {
+            type: [CategoryScoreSchema],
+            validate: {
+                validator: function (val: CategoryScore[]) {
+                    return val.length === 5;
+                },
+                message: "Exactly 5 category scores are required.",
+            },
+            required: true,
+        },
+        strengths: {
+            type: [String],
+            required: true,
+        },
+        areasForImprovement: {
+            type: [String],
+            required: true,
+        },
+        finalAssessment: {
+            type: String,
+            required: true,
+        },
     },
-    strengths: {
-        type: [String],
-        required: true,
-    },
-    areasForImprovement: {
-        type: [String],
-        required: true,
-    },
-    finalAssessment: {
-        type: String,
-        required: true,
-    },
-});
+    {
+        timestamps: true,
+    }
+);
 
 const InterviewFeedbackModel =
     mongoose.models.InterviewFeedback ||

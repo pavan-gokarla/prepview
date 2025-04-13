@@ -3,7 +3,11 @@ import { ApiResponse } from "../models/types";
 
 import { auth, signIn, signOut } from "@/auth";
 import { connectDB } from "../mongodb/mongoDbConnection";
-import InterviewFeedbackModel, { Interview, User } from "../mongodb/schemas";
+import InterviewFeedbackModel, {
+    Interview,
+    InterviewFeedback,
+    User,
+} from "../mongodb/schemas";
 import { SavedMessage } from "@/components/ui/agent";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
@@ -93,7 +97,8 @@ export async function getInterviewById(id: string) {
 export async function createFeedback(
     interviewId: string,
     email: string,
-    transcript: SavedMessage[]
+    transcript: SavedMessage[],
+    techStack: string
 ) {
     await connectDB();
     try {
@@ -161,6 +166,7 @@ export async function createFeedback(
         console.log("here");
         const feedback = {
             interviewId: interviewId,
+            techStack: techStack,
             email: email,
             totalScore: object.totalScore,
             categoryScores: object.categoryScores,
@@ -181,8 +187,13 @@ export async function createFeedback(
 export async function signOutUser() {
     await signOut();
 }
-export async function emailExists(email: string) {
+
+export async function getFeedbacks(email: string) {
     await connectDB();
-    const res = await User.exists({ email: email });
-    console.log(res);
+    return await InterviewFeedbackModel.find({ email: email });
+}
+
+export async function getFeedbackById(id: string) {
+    await connectDB();
+    return InterviewFeedbackModel.findById(id).exec();
 }

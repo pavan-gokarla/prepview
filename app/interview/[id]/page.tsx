@@ -16,9 +16,8 @@ const InterViewId = async ({ params }: {
 
             <div id="heading-box">
                 <h1 className='text-[var(--noble--black--0)] text-4xl text-center  ' >{interview.techStack} Interview</h1>
-                <p className='text-[var(--noble--black--300)] text-center' >Start creating your personalized interview</p>
             </div>
-            <Agent type='interview' questions={interview.questions} id={interview._id} />
+            <Agent type='interview' questions={interview.questions} id={interview._id} techStack={interview.techStack} />
         </div>
     )
 }

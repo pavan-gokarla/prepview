@@ -25,7 +25,7 @@ export interface SavedMessage {
     content: string;
 }
 
-const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: string, questions?: string[] }) => {
+const Agent = ({ type, id, questions, techStack }: { type: 'generate' | 'interview', id?: string, questions?: string[], techStack?: string }) => {
     const [user, setUser] = useState<Session | null>(null);
     const router = useRouter();
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -92,7 +92,7 @@ const Agent = ({ type, id, questions }: { type: 'generate' | 'interview', id?: s
     }, []);
 
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-        const res = await createFeedback(id!, user?.user?.email!, messages)
+        const res = await createFeedback(id!, user?.user?.email!, messages, techStack!)
         if (res.success) {
             console.log("res", res)
             toast.success("Feedback created sucessfully ")
