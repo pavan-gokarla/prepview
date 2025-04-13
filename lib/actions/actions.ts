@@ -6,6 +6,7 @@ import { connectDB } from "../mongodb/mongoDbConnection";
 import InterviewFeedbackModel, {
     Interview,
     InterviewFeedback,
+    IUser,
     User,
 } from "../mongodb/schemas";
 import { SavedMessage } from "@/components/ui/agent";
@@ -196,4 +197,28 @@ export async function getFeedbacks(email: string) {
 export async function getFeedbackById(id: string) {
     await connectDB();
     return InterviewFeedbackModel.findById(id).exec();
+}
+
+export async function hasUserVerified(email: string) {
+    await connectDB();
+    const user = await User.findOne({ email: email });
+
+    return user?.isVerified;
+}
+
+export async function doesUserHaveCredits(creditsToUse: number, email: string) {
+    await connectDB();
+    const result = await User.findOneAndUpdate(
+        {
+            email,
+            credits: { $gte: creditsToUse },
+        },
+        {
+            $inc: { credits: -creditsToUse },
+        },
+        {
+            new: false,
+        }
+    );
+    return result !== null;
 }

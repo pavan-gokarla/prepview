@@ -1,18 +1,20 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 import { Schema, model, models } from "mongoose";
 
-interface IUser {
+export interface IUser {
     name: string;
     email: string;
     password: string;
     credits: number;
+    isVerified: boolean;
 }
 
-const userSchema = new Schema({
+const userSchema = new Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    credits: { type: Number, default: 10, required: false },
+    credits: { type: Number, default: 100, required: false },
+    isVerified: { type: Boolean, default: false, required: false },
 });
 
 export const User = models?.User || model<IUser>("User", userSchema);

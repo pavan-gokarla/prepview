@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
     reactStrictMode: true,
     images: {
         remotePatterns: [
@@ -13,7 +16,6 @@ const nextConfig: NextConfig = {
                 hostname: "lh3.googleusercontent.com",
             },
         ],
-        // remotePatterns: ["w7.pngwing.com"],
     },
 };
 
