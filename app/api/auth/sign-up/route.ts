@@ -9,7 +9,7 @@ const UserSchmema = z.object({
     password: z.string().min(8),
 });
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
     await connectDB();
     const { email, password, name } = await req.json();
     try {
