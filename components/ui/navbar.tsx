@@ -13,7 +13,13 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Session } from "next-auth";
 import { getUser } from "@/lib/actions/actions";
-import { BadgePlus, BookCheck, BookOpenCheck, FileCode, MessageSquareText } from "lucide-react";
+import {
+    BadgePlus,
+    BookCheck,
+    BookOpenCheck,
+    FileCode,
+    MessageSquareText,
+} from "lucide-react";
 
 export function SideBar({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<Session | null>(null);
@@ -37,33 +43,22 @@ export function SideBar({ children }: { children: React.ReactNode }) {
         {
             label: "Create Interview",
             href: "/",
-            icon: (
-                <BadgePlus className="h-5 w-5 shrink-0 " />
-
-            ),
+            icon: <BadgePlus className="h-5 w-5 shrink-0 " />,
         },
         {
             label: "My Interviews",
             href: "/my-interviews",
-            icon: (
-
-                <BookCheck className="h-5 w-5 shrink-0" />
-
-            ),
+            icon: <BookCheck className="h-5 w-5 shrink-0" />,
         },
         {
             label: "All Interviews",
             href: "/all-interviews",
-            icon: (
-                <BookOpenCheck className="h-5 w-5 shrink-0 " />
-            ),
+            icon: <BookOpenCheck className="h-5 w-5 shrink-0 " />,
         },
         {
             label: "FeedBacks",
             href: "/feedbacks",
-            icon: (
-                <MessageSquareText className="h-5 w-5 shrink-0 " />
-            ),
+            icon: <MessageSquareText className="h-5 w-5 shrink-0 " />,
         },
         {
             label: "Logout",
@@ -103,11 +98,15 @@ export function SideBar({ children }: { children: React.ReactNode }) {
                                     href: "/",
                                     icon: (
                                         <Image
-                                            src={user.user?.image || "/default-avatar.png"}
+                                            src={
+                                                user.user?.image ||
+                                                "/default-avatar.png"
+                                            }
                                             alt={"User Image"}
                                             width={40}
                                             height={40}
                                             className="h-10 w-10 rounded-full"
+                                            unoptimized
                                         />
                                     ),
                                 }}
@@ -120,17 +119,13 @@ export function SideBar({ children }: { children: React.ReactNode }) {
                     </div>
                 </SidebarBody>
             </Sidebar>
-            <Dashboard >
-                <div className="h-screen ">
-                    {children}
-                </div>
+            <Dashboard>
+                <div className="h-screen ">{children}</div>
             </Dashboard>
         </div>
     );
 }
-export const Logo = ({ open }: {
-    open: boolean
-}) => {
+export const Logo = ({ open }: { open: boolean }) => {
     return (
         <Link
             href="/"
@@ -142,9 +137,11 @@ export const Logo = ({ open }: {
                 animate={{ opacity: 1 }}
                 className="font-medium whitespace-pre text-black dark:text-white"
             >
-                {
-                    open ? <h1 className=" text-4xl hidden lg:flex" >PrepView</h1> : <FileCode />
-                }
+                {open ? (
+                    <h1 className=" text-4xl hidden lg:flex">PrepView</h1>
+                ) : (
+                    <FileCode />
+                )}
             </motion.span>
         </Link>
     );
@@ -162,7 +159,7 @@ export const LogoIcon = () => {
 
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="overflow-y-scroll w-screen bg-[var(--noble--black--600)]" >
+        <div className="overflow-y-scroll w-screen bg-[var(--noble--black--600)]">
             {children}
         </div>
     );

@@ -164,7 +164,7 @@ export async function createFeedback(
           `,
             system: "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
         });
-        console.log("here");
+
         const feedback = {
             interviewId: interviewId,
             techStack: techStack,
@@ -179,9 +179,9 @@ export async function createFeedback(
         console.log(feedback);
         await InterviewFeedbackModel.create(feedback);
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.log("error", error);
-        return { success: false, error: error };
+        return { success: false, error: error.toString() };
     }
 }
 

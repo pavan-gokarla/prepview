@@ -47,10 +47,12 @@ const Agent = ({
     const [messages, setMessages] = useState<SavedMessage[]>([]);
     const [isSpeaking, setIsSpeaking] = useState(false);
 
+    const fetchUser = async () => {
+        let user = await getUser();
+        console.log("user in agent ", user);
+        setUser(user);
+    };
     useEffect(() => {
-        const fetchUser = async () => {
-            setUser(await getUser());
-        };
         fetchUser();
         const onCallStart = () => {
             setCallStatus(CallStatus.ACTIVE);
@@ -86,9 +88,9 @@ const Agent = ({
             setIsSpeaking(false);
         };
 
-        const onError = (error: Error) => {
+        const onError = async (error: Error) => {
             console.log("Error:", error);
-            handleGenerateFeedback(messages, type);
+            await handleGenerateFeedback(messages, type);
             router.push("/my-interviews");
         };
 
@@ -114,6 +116,7 @@ const Agent = ({
         type: string
     ) => {
         if (type === "generate") return;
+        await fetchUser();
         const res = await createFeedback(
             id!,
             user?.user?.email!,
