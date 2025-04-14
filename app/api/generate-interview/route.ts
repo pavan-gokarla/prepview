@@ -32,8 +32,18 @@ export async function POST(req: Request) {
             noOfQuestions: noOfQuestions,
         };
         await Interview.create(interview);
-        return Response.json({ success: true, message: text }, { status: 200 });
+        return Response.json(
+            { success: true, message: "Your interview has been generated" },
+            { status: 200 }
+        );
     } catch (error: any) {
         console.error("error occured", error.message);
+        return Response.json(
+            {
+                success: false,
+                message: `failed to created interview because ${error.message}`,
+            },
+            { status: 200 }
+        );
     }
 }
