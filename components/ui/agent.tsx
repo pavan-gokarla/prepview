@@ -49,7 +49,6 @@ const Agent = ({
 
     const fetchUser = async () => {
         let user = await getUser();
-        console.log("user in agent ", user);
         setUser(user);
     };
     useEffect(() => {
@@ -59,7 +58,6 @@ const Agent = ({
         };
 
         const onCallEnd = () => {
-            console.log("call ended");
             setCallStatus(CallStatus.FINISHED);
             handleGenerateFeedback(messages, type);
             vapi.stop();
@@ -79,17 +77,15 @@ const Agent = ({
         };
 
         const onSpeechStart = () => {
-            console.log("speech start");
             setIsSpeaking(true);
         };
 
         const onSpeechEnd = () => {
-            console.log("speech end");
             setIsSpeaking(false);
         };
 
         const onError = async (error: Error) => {
-            console.log("Error:", error);
+            console.error("Error:", error);
             await handleGenerateFeedback(messages, type);
             router.push("/my-interviews");
         };
@@ -124,7 +120,6 @@ const Agent = ({
             techStack!
         );
         if (res.success) {
-            console.log("res", res);
             toast.success("Feedback created sucessfully ");
             router.push("/feedbacks");
         } else {

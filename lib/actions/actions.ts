@@ -109,7 +109,6 @@ export async function createFeedback(
                     `- ${sentence.role}: ${sentence.content}\n`
             )
             .join("");
-        console.log("formattedTranscript", formattedTranscript);
         const { object } = await generateObject({
             model: google("gemini-2.0-flash-001", {
                 structuredOutputs: false,
@@ -176,7 +175,6 @@ export async function createFeedback(
             finalAssessment: object.finalAssessment,
             createdAt: new Date().toISOString(),
         };
-        console.log(feedback);
         await InterviewFeedbackModel.create(feedback);
         return { success: true };
     } catch (error: any) {

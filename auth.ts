@@ -18,7 +18,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
-                console.log(credentials);
                 const res = await fetch(
                     `${process.env.DOMAIN}/api/auth/sign-in`,
                     {
