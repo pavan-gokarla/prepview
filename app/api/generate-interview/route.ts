@@ -7,6 +7,8 @@ export async function POST(req: Request) {
     await connectDB();
 
     const { email, noOfQuestions, techStack, level } = await req.json();
+    console.error("json files", { email, noOfQuestions, techStack, level });
+    console.error("res.body", req.body);
 
     try {
         const { text } = await generateText({
