@@ -14,7 +14,7 @@ const userSchema = new Schema<IUser>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     credits: { type: Number, default: 100, required: false },
-    isVerified: { type: Boolean, default: false, required: false },
+    isVerified: { type: Boolean, default: true, required: false },
 });
 
 export const User = models?.User || model<IUser>("User", userSchema);
