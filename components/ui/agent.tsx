@@ -7,7 +7,7 @@ import {
     hasUserVerified,
 } from "@/lib/actions/actions";
 import { Session } from "next-auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./button";
 import CustomAvatar from "./CustomAvatar";
 import { vapi } from "@/lib/vapi/vapi.sdk";
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { interviewer } from "@/lib/constants/index";
 
 import { toast } from "sonner";
+import { AlertDialogBox } from "./alert-carousel";
 
 enum CallStatus {
     INACTIVE = "INACTIVE",
@@ -185,8 +186,19 @@ const Agent = ({
         setCallStatus(CallStatus.FINISHED);
         vapi.stop();
     };
+    const alertTexts = [
+        "You are interacting with an AI voice model. While it strives to provide accurate and helpful information, responses may occasionally contain errors or inaccuracies.",
+        "To ensure a smooth experience, continuous interaction with the voice agent is required. Inactivity for an extended period may result in the session or meeting ending automatically.",
+        "If you are generating an interview, the meeting will end automatically once the generation is complete.",
+        "If you are actively taking the interview, you will need to manually press the End button to close the session.",
+    ];
     return (
         <div className="w-[80vw]  flex  gap-10 flex-col justify-around items-center ">
+            <AlertDialogBox
+                isOpened={true}
+                texts={alertTexts}
+                heading="Note!"
+            />
             <div id="voice-bot " className=" flex gap-40">
                 <div
                     id="interviewer"
