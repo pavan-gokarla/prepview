@@ -168,9 +168,10 @@ export const SidebarLink = ({
     const { open, animate } = useSidebar();
     return (
         <Link
-            onClick={() => {
+            aria-disabled
+            onClick={async () => {
                 if (link.href === "/sign-out") {
-                    signOut({ callbackUrl: "/sign-in" });
+                    await signOut({ callbackUrl: "/sign-in" });
                 }
             }}
             href={link.href}
