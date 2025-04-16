@@ -3,9 +3,6 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
-import { connectDB } from "./lib/mongodb/mongoDbConnection";
-import { User } from "./lib/mongodb/schemas";
-import { ApiResponse } from "./lib/models/types";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -55,12 +52,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
             );
             const { success } = await res.json();
+            console.log("success", success);
             return success;
         },
     },
     pages: {
         signIn: "/sign-in",
-        error: "/sign-in",
     },
 
     session: {
