@@ -24,7 +24,7 @@ const AllInterviews = async () => {
             {interveiws.length > 0 ? (
                 <div
                     id="interviews"
-                    className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3gap-10 h-full w-full px-10 "
+                    className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 gap-10 h-full w-full px-10 "
                 >
                     {interveiws.map((val, index) => (
                         <InterviewCard
