@@ -36,10 +36,7 @@ const AllInterviews = async () => {
             ) : (
                 <div className="h-full w-full flex  flex-col justify-center items-center ">
                     <p className="text-xl">Their are no interviews </p>
-                    <Link
-                        href="/create-interview"
-                        className="text-[var(--stem--green--500)]"
-                    >
+                    <Link href="/" className="text-[var(--stem--green--500)]">
                         Create Interview
                     </Link>
                 </div>
